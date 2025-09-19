@@ -1,0 +1,80 @@
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: ordermatching-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ordermatching
+      POSTGRES_USER: orderuser
+      POSTGRES_PASSWORD: orderpassword
+      POSTGRES_HOST_AUTH_METHOD: trust
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - ordermatching-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U orderuser -d ordermatching"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # Order Matching Application
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ordermatching-app
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://orderuser:orderpassword@postgres:5432/ordermatching
+      PYTHONPATH: /app
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - ordermatching-network
+    volumes:
+      - ./logs:/app/logs
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import requests; requests.get('http://localhost:8080/api/v1/order-book/health', timeout=10)",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Database Migration Service (runs once)
+  migration:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ordermatching-migration
+    environment:
+      DATABASE_URL: postgresql://orderuser:orderpassword@postgres:5432/ordermatching
+      PYTHONPATH: /app
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - ordermatching-network
+    command: ["alembic", "upgrade", "head"]
+    restart: "no"
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  ordermatching-network:
+    driver: bridge

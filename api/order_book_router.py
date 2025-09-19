@@ -10,6 +10,14 @@ from domain.order_side import OrderSide
 order_book_router = APIRouter()
 
 
+@order_book_router.get("/health")
+def health_check():
+    """
+    Health check endpoint for container health monitoring.
+    """
+    return {"status": "healthy", "service": "order-matching"}
+
+
 @order_book_router.get("/open")
 def get_open_orders(
         symbol: Optional[str] = Query(None),
