@@ -132,8 +132,6 @@ If you want to run the test suite:
 
 # Ensure you have poetry installed and a TEST_DATABASE_URL in your .env
 
-poetry run pytest
-
 ```
-
+poetry run pytest
 ```
