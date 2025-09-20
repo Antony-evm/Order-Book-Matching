@@ -25,6 +25,7 @@ def seed_orders(db_session):
     db_session.add_all(rows)
     db_session.flush()
 
+
 @pytest.mark.parametrize(
     "symbol,side,price,expected_count",
     [
@@ -45,7 +46,7 @@ def test_fetch_open_orders_no_filters(order_service, seed_orders, symbol, side, 
 
 
 @pytest.mark.parametrize(
-    "order_request, expected",[
+    "order_request, expected", [
         (
                 OrderRequest(symbol="SP500", side=OrderSide.BUY, price=100, quantity=10, decimals=2),
                 {"order_id": 8,
