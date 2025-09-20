@@ -21,7 +21,7 @@ class OrderMapper:
     def to_domain_order_book(rows: List[Type[OrderModel]]) -> OrderBook:
         if not rows:
             return OrderBook({})
-        return OrderBook({r.id: OrderMapper.to_domain(r) for r in rows})
+        return OrderBook({row.id: OrderMapper.to_domain(row) for row in rows})
 
     @staticmethod
     def to_model(entity: Order, order_model: Optional[OrderModel] = None) -> OrderModel:

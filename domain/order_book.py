@@ -17,5 +17,5 @@ class OrderBook:
         self.orders.pop(order.order_id, None)
 
     def to_dict(self) -> dict:
-        return {"orders": {oid: o.to_dict() for oid, o in self.orders.items()}}
+        return {"orders": {order_id: order.to_dict() for order_id, order in self.orders.items()}}
 
