@@ -2,6 +2,7 @@ from typing import Type
 
 from sqlalchemy.orm import Session
 
+from api.exceptions import OrderNotFoundException
 from domain.order import Order
 from domain.order_mapper import OrderMapper
 from .order_model import OrderModel
@@ -25,7 +26,7 @@ class OrdersRepository:
     def update_order(self, order: Order) -> OrderModel:
         order_model = self.get_open_order_by_id(order.order_id)
         if not order_model:
-            raise ValueError(f"Order with ID {order.order_id} not found")
+            raise OrderNotFoundException(order.order_id)
         order_model = OrderMapper.to_model(order, order_model)
         self.db.flush()
         self.db.refresh(order_model)
