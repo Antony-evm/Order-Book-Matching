@@ -2,6 +2,7 @@ import pytest
 from sqlalchemy import text
 
 from api.order_request import OrderRequest
+from domain.order import Order
 from domain.order_side import OrderSide
 from infrastructure.order_model import OrderModel
 
@@ -49,50 +50,22 @@ def test_fetch_open_orders_no_filters(order_service, seed_orders, symbol, side, 
     "order_request, expected", [
         (
                 OrderRequest(symbol="SP500", side=OrderSide.BUY, price=100, quantity=10, decimals=2),
-                {"order_id": 8,
-                 "symbol": "SP500",
-                 "price": 100,
-                 "quantity": 10,
-                 "side": "buy",
-                 "decimals": 2,
-                 "is_open": True
-                 }
+                Order(symbol="SP500", side=OrderSide.BUY, price=100, quantity=10, order_id=8)
         ),
         (
                 OrderRequest(symbol="AAPL", side=OrderSide.BUY, price=110, quantity=10, decimals=2),
-                {"order_id": 8,
-                 "symbol": "AAPL",
-                 "price": 110,
-                 "quantity": 10,
-                 "side": "buy",
-                 "decimals": 2,
-                 "is_open": True
-                 }
+                Order(symbol="AAPL", side=OrderSide.BUY, price=110, quantity=10, order_id=8)
         ),
         (
                 OrderRequest(symbol="AAPL", side=OrderSide.BUY, price=100, quantity=10, decimals=2),
-                {"order_id": 8,
-                 "symbol": "AAPL",
-                 "price": 100,
-                 "quantity": 8,
-                 "side": "buy",
-                 "decimals": 2,
-                 "is_open": True
-                 }
+                Order(symbol="AAPL", side=OrderSide.BUY, price=100, quantity=8, order_id=8)
         ),
         (
                 OrderRequest(symbol="AAPL", side=OrderSide.BUY, price=100, quantity=1, decimals=2),
-                {"order_id": 8,
-                 "symbol": "AAPL",
-                 "price": 100,
-                 "quantity": 0,
-                 "side": "buy",
-                 "decimals": 2,
-                 "is_open": False
-                 }
+                Order(symbol="AAPL", side=OrderSide.BUY, price=100, quantity=0, order_id=8, is_open=False)
         )
     ]
 )
 def test_adding_order(order_service, seed_orders, order_request, expected):
     order = order_service.add_order(order_request)
-    assert order.to_dict() == expected
+    assert order == expected

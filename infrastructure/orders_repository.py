@@ -1,10 +1,9 @@
-from typing import Type
-
 from sqlalchemy.orm import Session
 
 from api.exceptions import OrderNotFoundException
 from domain.order import Order
 from domain.order_mapper import OrderMapper
+
 from .order_model import OrderModel
 
 
@@ -37,7 +36,7 @@ class OrdersRepository:
             symbol: str = None,
             side: str = None,
             price: int = None
-    ) -> list[Type[OrderModel]]:
+    ) -> list[OrderModel]:
         """Fetch all open OrderBook entries"""
         result = self.db.query(OrderModel).filter(OrderModel.is_open == True)
         if symbol:
@@ -46,5 +45,6 @@ class OrdersRepository:
             result = result.filter(OrderModel.side == side)
         if price:
             result = result.filter(OrderModel.price == price)
-        return result.order_by(OrderModel.id).all()
 
+        result = result.order_by(OrderModel.id).all()
+        return result if result else []

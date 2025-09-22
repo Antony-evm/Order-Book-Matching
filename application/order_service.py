@@ -1,9 +1,9 @@
-from domain.order_side import OrderSide
-from infrastructure.orders_repository import OrdersRepository
+from api.order_request import OrderRequest
+from domain.order import Order
 from domain.order_book import OrderBook
 from domain.order_mapper import OrderMapper
-from domain.order import Order
-from api.order_request import OrderRequest
+from domain.order_side import OrderSide
+from infrastructure.orders_repository import OrdersRepository
 
 
 class OrderService:

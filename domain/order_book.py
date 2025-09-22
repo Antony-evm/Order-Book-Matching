@@ -16,6 +16,3 @@ class OrderBook:
     def remove_order(self, order: Order):
         self.orders.pop(order.order_id, None)
 
-    def to_dict(self) -> dict:
-        return {"orders": {order_id: order.to_dict() for order_id, order in self.orders.items()}}
-

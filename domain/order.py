@@ -35,13 +35,20 @@ class Order:
     def get_order_id(self) -> int:
         return self.order_id
 
-    def to_dict(self) -> dict:
-        return {
-            "order_id": self.order_id,
-            "symbol": self.symbol,
-            "price": self.price,
-            "quantity": self.quantity,
-            "side": self.side,
-            "decimals": self.decimals,
-            "is_open": self.is_open,
-        }
+    def __eq__(self, other):
+        if not isinstance(other, Order):
+            return False
+        return (
+                self.order_id == other.order_id and
+                self.symbol == other.symbol and
+                self.price == other.price and
+                self.quantity == other.quantity and
+                self.side == other.side and
+                self.decimals == other.decimals and
+                self.is_open == other.is_open
+        )
+
+    def __repr__(self):
+        return (f"Order(id={self.order_id}, symbol={self.symbol}, side={self.side}, price={self.price},"
+                f" quantity={self.quantity}, is_open={self.is_open})")
+

@@ -1,4 +1,5 @@
 import uvicorn
+
 from app import log_config
 from app.factory import create_app
 

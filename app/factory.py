@@ -1,8 +1,8 @@
 from fastapi import FastAPI, HTTPException
 
+from app.exception_handlers import http_exception_handler
 from app.middleware import include_middleware
 from app.routers import include_routers
-from app.exception_handlers import http_exception_handler
 
 
 def create_app() -> FastAPI:

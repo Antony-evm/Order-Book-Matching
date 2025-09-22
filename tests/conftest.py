@@ -1,6 +1,7 @@
 import os
+
 import pytest
-from sqlalchemy import create_engine, text, event
+from sqlalchemy import create_engine, event, text
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import NullPool
 
