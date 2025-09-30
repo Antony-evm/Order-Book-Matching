@@ -10,9 +10,6 @@ from .metadata import Metadata
 
 
 class SuccessResponseModel[DataT](BaseModel):
-    """
-    SuccessResponse represents a successful API response containing data and metadata.
-    """
     data: Optional[DataT] = Field(
         None,
         description="The data returned by the API call. This can be any type of data "
